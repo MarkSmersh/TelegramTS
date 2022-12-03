@@ -1,6 +1,6 @@
 {
   "name": "@marksmersh/telegramts",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Low-weight telegram client written on typescript",
   "main": "./src/index.ts",
   "repository": {
