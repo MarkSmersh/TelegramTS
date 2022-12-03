@@ -1,7 +1,7 @@
 import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from ".";
 
 const t = new Telegram({
-    token: "5942711238:AAFpt8YMeLijXsztLrJ_yikJbO7YFCxfbkQ",
+    token: "",
     state: new States({
         "default": [
             {
