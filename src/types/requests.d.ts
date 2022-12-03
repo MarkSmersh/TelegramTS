@@ -146,6 +146,10 @@ export interface WebAppData {
     button_text: string
 }
 
+export interface MessageId {
+    message_id: number
+}
+
 //#endregion
 
 //#region EntitiesTypes
@@ -213,12 +217,24 @@ export interface RequestTypes {
             chat_id: number | string, message_id: string
         },
         response: true
+    },
+    forwardMessage: {
+        request: {
+            chat_id: number | string, message_thread_id?: number, from_chat_id: string | number,
+            disable_notification?: boolean, protect_content?: boolean, message_id: number
+        },
+        response: Message
+    },
+    copyMessage: {
+        request: {
+            chat_id: string | number, message_thread_id?: number, from_chat_id: string | number,
+            message_id: number, caption?: string, parse_mode?: string, caption_entities?: MessageEntity[],
+            disable_notification?: boolean, protect_content: boolean, reply_to_message_id: number,
+            allow_sending_without_reply?: boolean, reply_markup?: string 
+        },
+        response: MessageId
     }
 }
-
-// export type SlashCommands = "/start" | "/help" | "/ping" | "/test";
-// export type CallbackData = typeof ProductInfo[number]["shortName"] | "show_product_info" | "next" | "prev" | number; 
-// export type MessageData = "📝 Create order" | "📦 Select packaged" | "📮 Create waybills" | "📑 Orders list";
 
 export type SlashCommands = string;
 export type CallbackData = string;
