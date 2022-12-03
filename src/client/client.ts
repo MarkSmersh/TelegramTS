@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { ResponseEvents, RequestTypes, Update, BasicResponse } from "../types/requests";
+import { RequestTypes, Update, BasicResponse } from "../types/requests";
 import { EventEmitter } from "node:events";
 import State from "../state/state";
 
@@ -81,10 +81,8 @@ export default class Client extends EventEmitter {
                     }
                 }
                 if (event.callback_query) {
-                    let state = this.State?.states[event.callback_query.from.id] as string;
-                    if (!state) {
-                        state = this.State?.update(event.callback_query.from.id, "default") as string
-                    }
+                    let state = this.State?.states[event.callback_query.from.id]
+                        || this.State?.update(event.callback_query.from.id, "default") as string;
                     await this.State?.filter("default", "callback", event.callback_query.data as string, [this, event.callback_query]);
                     this.State?.update(
                         event.message.chat.id,

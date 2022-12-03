@@ -1,7 +1,7 @@
-import { Telegram, States, Message } from ".";
+import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from ".";
 
 const t = new Telegram({
-    token: "",
+    token: "5942711238:AAFpt8YMeLijXsztLrJ_yikJbO7YFCxfbkQ",
     state: new States({
         "default": [
             {
@@ -24,7 +24,7 @@ const t = new Telegram({
 })
 
 t.on("start", (e) => {
-    console.log(e);
+    console.log(`Bot ${e.first_name} started!`);
 })
 
 t.on("update", (e) => {
@@ -34,12 +34,18 @@ t.on("update", (e) => {
 t.start();
 
 async function start(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Started!", chat_id: event.chat.id })
+    client.request("sendMessage", { text: "Started!", chat_id: event.chat.id, 
+        reply_markup: ReplyMarkup({ resizeKeyboard: true }, [
+            ReplyButton({ text: "finish" })
+        ], [
+            ReplyButton({ text: "finish" }), ReplyButton({ text: "finish" })
+        ])})
     return "menu";
 }
 
 async function finish(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Nice!", chat_id: event.chat.id })
+    client.request("sendMessage", { text: "Finish!", chat_id: event.chat.id,
+        reply_markup: ReplyRemove({})})
 }
 
 async function newStateExecute(newState: string) {

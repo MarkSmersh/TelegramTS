@@ -1,9 +1,4 @@
-// import { CallbackQuery, Message, Update, SlashCommands, MessageData, CallbackData } from "../types/requests";
-// import Client from "../client/client";
-// import { SlashCommands, MessageData, CallbackData } from "../types/telegram";
-// import { stateConfig, StatesList } from "./stateConfig";
-
-import { EventTypeModel, EventModel, FunctionModel, FunctionReturn } from "../types/events";
+import { EventTypeModel, EventModel, FunctionModel } from "../types/events";
 
 export default class State {
     private events: Record<string, EventModel[]>;
