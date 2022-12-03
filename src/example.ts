@@ -1,7 +1,7 @@
 import { Telegram, States, Message } from ".";
 
 const t = new Telegram({
-    token: "5145270511:AAGloYqT2qiXvB_XzNL4EdlNQckHX9dDnSA",
+    token: "",
     state: new States({
         "default": [
             {
