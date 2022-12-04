@@ -64,19 +64,27 @@ export default class Client extends EventEmitter {
                         for (let i = 0; i < event.message.entities.length; i++) {
                             if (event.message.entities[i].type == "bot_command") {
                                 let command = event.message?.text?.split(" ").find((word) => word.startsWith("/")) as string;
-                                this.State?.update(
-                                    event.message.chat.id,
-                                    await this.State?.filter("default", "command", command, [this, event.message])
-                                )
+                                let newState = await this.State?.filter("default", "command", command, [this, event.message])
+
+                                if (newState) {
+                                    this.State?.update(
+                                        event.message.chat.id,
+                                        newState
+                                    )
+                                }
                                 return;
                             }
                         }
                     }
                     else {
-                        this.State?.update(
-                            event.message.chat.id,
-                            await this.State?.filter(state, "message", event.message.text as string, [this, event.message]) as string
-                        )
+                        let newState = await this.State?.filter(state, "message", event.message.text as string, [this, event.message])
+
+                        if (newState) {
+                            this.State?.update(
+                                event.message.chat.id,
+                                newState
+                            )
+                        }
                         return;
                     }
                 }
@@ -84,10 +92,14 @@ export default class Client extends EventEmitter {
                     let state = this.State?.states[event.callback_query.from.id]
                         || this.State?.update(event.callback_query.from.id, "default") as string;
                     await this.State?.filter("default", "callback", event.callback_query.data as string, [this, event.callback_query]);
-                    this.State?.update(
-                        event.message.chat.id,
-                        await this.State?.filter(state, "callback", event.callback_query.data as string, [this, event.callback_query])
-                    )
+                    
+                    let newState = await this.State?.filter(state, "callback", event.callback_query.data as string, [this, event.callback_query]);
+                    if (newState) {
+                        this.State?.update(
+                            event.message.chat.id,
+                            newState
+                        )
+                    }
                     return;
                 }
             })

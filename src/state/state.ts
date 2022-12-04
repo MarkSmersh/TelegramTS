@@ -27,7 +27,7 @@ export default class State {
         type: KT, // "callback" | "command" | "message"
         data: KE, // actually event (using as key)
         args: Parameters<FunctionModel> // (event, event.message | event.callback)
-    ): Promise<string> {
+    ): Promise<string | undefined> {
         let curEvent = this.events[state];
     
         if (curEvent) {
@@ -36,8 +36,7 @@ export default class State {
 
             event = curEvent.find((event) => event.type == type && event.data == "default");
             if (event) return (await event.function(...args)) || state;
-        } 
-        return state;
+        }
     }
 
     public update (id: number, state: string): string {
