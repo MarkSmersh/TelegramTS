@@ -32,10 +32,10 @@ export default class State {
     
         if (curEvent) {
             let event = curEvent.find((event) => event.type == type && event.data == data);
-            if (event) return (await event.function(...args)) || state;
+            if (event) return (await event.function(...args)) || undefined;
 
             event = curEvent.find((event) => event.type == type && event.data == "default");
-            if (event) return (await event.function(...args)) || state;
+            if (event) return (await event.function(...args)) || undefined;
         }
     }
 
