@@ -96,7 +96,7 @@ export default class Client extends EventEmitter {
                     let newState = await this.State?.filter(state, "callback", event.callback_query.data as string, [this, event.callback_query]);
                     if (newState) {
                         this.State?.update(
-                            event.message.chat.id,
+                            event.callback_query.from.id,
                             newState
                         )
                     }
