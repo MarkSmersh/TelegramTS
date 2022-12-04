@@ -188,7 +188,7 @@ export interface RequestTypes {
     sendMessage: { 
         request: 
             { 
-                chat_id: number | undefined, text: string | undefined, parse_mode?: ParseModes, 
+                chat_id: number | string | undefined, text: string | undefined, parse_mode?: ParseModes, 
                 entities?: MessageEntity[], disable_web_page_preview?: boolean, disable_notification?: boolean,
                 protect_content?: boolean, reply_to_message_id?: number, allow_sending_without_reply?: boolean,
                 reply_markup?: InlineKeyboardMarkup | string
@@ -198,7 +198,7 @@ export interface RequestTypes {
     editMessageText: { 
         request: 
         {
-            chat_id: number | undefined, message_id: number, text: string, inline_message_id?: string, 
+            chat_id: number | string | undefined, message_id: number, text: string, inline_message_id?: string, 
             parse_mode?: ParseModes, entites?: MessageEntity[], disable_web_page_preview?: boolean,
             reply_markup?: string 
         },
@@ -214,20 +214,20 @@ export interface RequestTypes {
     },
     deleteMessage: {
         request: {
-            chat_id: number | string, message_id: string
+            chat_id: number | string | undefined, message_id: string
         },
         response: true
     },
     forwardMessage: {
         request: {
-            chat_id: number | string, message_thread_id?: number, from_chat_id: string | number,
+            chat_id: number | string | undefined, message_thread_id?: number, from_chat_id: string | number,
             disable_notification?: boolean, protect_content?: boolean, message_id: number
         },
         response: Message
     },
     copyMessage: {
         request: {
-            chat_id: string | number, message_thread_id?: number, from_chat_id: string | number,
+            chat_id: number | string | undefined, message_thread_id?: number, from_chat_id: string | number,
             message_id: number, caption?: string, parse_mode?: string, caption_entities?: MessageEntity[],
             disable_notification?: boolean, protect_content?: boolean, reply_to_message_id?: number,
             allow_sending_without_reply?: boolean, reply_markup?: string 
