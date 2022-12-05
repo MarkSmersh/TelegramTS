@@ -48,4 +48,8 @@ export default class State {
         }
         return this.states[id];
     }
+
+    public set (states: Record<number, string>) {
+        this.states = states;
+    }
 }
