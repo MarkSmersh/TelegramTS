@@ -39,14 +39,14 @@ export default class State {
         }
     }
 
-    public update (id: number, state: string): string {
+    public update (id: number, state: string) {
         if (this.states[id] !== state) {
             this.states[id] = state;
             if (this.onStateUpdate) {
                 this.onStateUpdate(state);
             }
         }
-        return this.states[id];
+        return { id: id, state: state };
     }
 
     public set (states: { id: number, state: string }[]) {
