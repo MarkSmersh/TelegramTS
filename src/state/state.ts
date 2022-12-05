@@ -3,7 +3,7 @@ import { EventTypeModel, EventModel, FunctionModel } from "../types/events";
 export default class State {
     private events: Record<string, EventModel[]>;
     public states: Record<number, string>;
-    private onStateUpdate: ((newState: string) => void) | undefined 
+    private onStateUpdate: ((newState: string, id: number) => void) | undefined 
 
     public constructor(
         events: Record<string, EventModel[]>,
@@ -39,14 +39,14 @@ export default class State {
         }
     }
 
-    public update (id: number, state: string) {
+    public update (id: number, state: string): string {
         if (this.states[id] !== state) {
             this.states[id] = state;
             if (this.onStateUpdate) {
-                this.onStateUpdate(state);
+                this.onStateUpdate(state, id);
             }
         }
-        return { id: id, state: state };
+        return state;
     }
 
     public set (states: { id: number, state: string }[]) {
