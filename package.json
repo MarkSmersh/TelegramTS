@@ -9,7 +9,7 @@
     "url": "git+https://github.com/MarkSmersh/TelegramTS.git"
   },
   "scripts": {
-    "build" : "tsc",
+    "build" : "tsc || exit 0",
     "pub": "npm run build && npm publish"
   },
   "keywords": [],
