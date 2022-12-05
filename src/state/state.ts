@@ -49,7 +49,9 @@ export default class State {
         return this.states[id];
     }
 
-    public set (states: Record<number, string>) {
-        this.states = states;
+    public set (states: { id: number, state: string }[]) {
+        states.forEach((s) => {
+            this.states[s.id] = s.state;
+        })
     }
 }
