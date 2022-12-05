@@ -9,7 +9,7 @@ export default class State {
         events: Record<string, EventModel[]>,
         config?: {
             states?: Record<number, string>,
-            onStateUpdate?: (newState: string) => void 
+            onStateUpdate?: ((newState: string, id: number) => void)
         }
     ) {
         this.events = events;
