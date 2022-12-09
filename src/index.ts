@@ -11,4 +11,5 @@ export { CallbackQuery, Message, Update } from "./types/requests"
 
 export { InlineMarkup, InlineButton,
          ReplyMarkup, ReplyButton,
-         ReplyRemove, ForceReply } from "./utils/keyboardConstructor"
+         ReplyRemove, ForceReply } from "./utils/keyboardConstructor";
+export { Escape } from "./utils/markdownFormater"
