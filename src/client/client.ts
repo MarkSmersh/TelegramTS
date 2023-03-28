@@ -52,6 +52,19 @@ export default class Client extends TelegramEventEmitter {
         return result;
     }
 
+    public async downloadFile(filePath: string): Promise<string> {
+        try {
+            const file = (await axios.request({
+                url: `https://api.telegram.org/file/bot${this.token}/${filePath}`,
+                method: "GET",
+                responseType: "arraybuffer"
+            })).data;
+            return Buffer.from(file, "binary").toString('base64');;
+        } catch (e) {
+            return (e as AxiosError).message;
+        }
+    }
+
     private async longpoll (updateId: number = 0) {
         let updates = await this.request("getUpdates", 
             { offset: (updateId != 0) ? updateId + 1 : updateId, timeout: 60});

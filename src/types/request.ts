@@ -31,7 +31,45 @@ export interface Message {
     author_signature?: string,
     entities?: MessageEntity[],
     reply_markup?: InlineKeyboardMarkup,
-    web_app_data?: WebAppData
+    web_app_data?: WebAppData,
+    audio?: Audio,
+    photo?: PhotoSize[],
+    voice: Voice
+}
+
+export interface File {
+    file_id: string,
+    file_unique_id: string,
+    file_size?: number,
+    file_path?: string
+}
+
+export interface Voice {
+    file_id: string,
+    file_unique_id: string,
+    duration: number,
+    mime_type?: string,
+    file_size?: number
+}
+
+export interface Audio {
+    file_id: string,
+    file_unique_id: string,
+    duration: number,
+    performer?: string,
+    title?: string,
+    file_name?: string,
+    mime_type?: string,
+    file_size?: number,
+    thumbnail?: PhotoSize
+}
+
+export interface PhotoSize {
+    file_id: string,
+    file_unique_id: string,
+    width: number,
+    height: number,
+    file_size?: number
 }
 
 export interface InlineKeyboardMarkup {
@@ -233,6 +271,14 @@ export interface RequestTypes {
             allow_sending_without_reply?: boolean, reply_markup?: string 
         },
         response: MessageId
+    },
+    getFile: {
+        request: {
+            file_id: string
+        },
+        response: {
+
+        }
     }
 }
 
