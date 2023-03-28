@@ -276,9 +276,7 @@ export interface RequestTypes {
         request: {
             file_id: string
         },
-        response: {
-
-        }
+        response: File
     }
 }
 
