@@ -1,5 +1,5 @@
 import Client from "../client/client";
-import { SlashCommands, CallbackData, MessageData } from "./requests";
+import { SlashCommands, CallbackData, MessageData } from "./request";
 
 export interface EventModel {
     type: keyof EventTypeModel,

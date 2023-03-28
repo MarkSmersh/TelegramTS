@@ -5,7 +5,7 @@ export { default as States } from "./state/state"
 
 // Types
 
-export { CallbackQuery, Message, Update } from "./types/requests"
+export { CallbackQuery, Message, Update } from "./types/request"
 
 // Utils
 

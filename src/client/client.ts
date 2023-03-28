@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { RequestTypes, Update, BasicResponse } from "../types/requests";
-import { EventEmitter } from "node:events";
+import { RequestTypes, Update, BasicResponse } from "../types/request";
 import State from "../state/state";
+import { TelegramEventEmitter } from "./TelegramEventEmitter";
 
-export default class Client extends EventEmitter {
+export default class Client extends TelegramEventEmitter {
     private basicUri = "https://api.telegram.org/bot";
     
     private token: string;

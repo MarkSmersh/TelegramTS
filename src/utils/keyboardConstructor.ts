@@ -1,8 +1,8 @@
 import { InlineKeyboardButton, InlineKeyboardMarkup, 
          ReplyKeyboardButton, ReplyKeyboardMarkup,
          ReplyKeyboardRemove, ForceReply,
-         LoginUrl, MessageData, WebAppInfo} from "../types/requests";
-import { CallbackData } from "../types/requests";
+         LoginUrl, MessageData, WebAppInfo} from "../types/request";
+import { CallbackData } from "../types/request";
 
 export function InlineMarkup (...inlineButtons: InlineKeyboardButton[][]): string {
     let inlineKeyboard: InlineKeyboardMarkup = {

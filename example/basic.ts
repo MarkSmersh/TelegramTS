@@ -1,4 +1,4 @@
-import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from ".";
+import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from "../src";
 
 const t = new Telegram({
     token: "",
