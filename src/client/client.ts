@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { RequestTypes, Update, BasicResponse } from "../types/request";
+import { RequestTypes, Update, BasicResponse, User } from "../types/request";
 import State from "../state/state";
 import { TelegramEventEmitter } from "./TelegramEventEmitter";
 
@@ -7,7 +7,8 @@ export default class Client extends TelegramEventEmitter {
     private basicUri = "https://api.telegram.org/bot";
     
     private token: string;
-    public State: typeof State.prototype | undefined; 
+    public State: typeof State.prototype | undefined;
+    public self: User | undefined;
 
     constructor (config: { token: string, state?: typeof State.prototype }) {
         super();
@@ -23,6 +24,7 @@ export default class Client extends TelegramEventEmitter {
         let answer = await this.request("getMe");
         if (answer) {
             this.emit("start", answer);
+            this.self = answer;
             this.longpoll();
         }
     }
