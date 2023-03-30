@@ -29,26 +29,32 @@ export default class Client extends TelegramEventEmitter {
         }
     }
 
-    public async request<K extends keyof RequestTypes>(methodName: K, methodParams: RequestTypes[K]["request"] = {}): Promise<RequestTypes[K]["response"]> {  
-        let response: AxiosResponse<any, any> = await new Promise (async (resolve) => {
-            let request = axios.get(
-                this.basicUri + this.token + "/" + methodName + "?" + new URLSearchParams(methodParams as Record<string, string>)
-            );
-
+    public async request<K extends keyof RequestTypes, P extends RequestTypes[K]>(methodName: K, methodParams: P["request"] = {}): Promise<P["response"]> {  
+        let data: BasicResponse = await new Promise (async (resolve) => {
+            let request = axios.request({
+                url: this.basicUri + this.token + "/" + methodName,
+                params: methodParams,
+                validateStatus: (s) => true
+            })
+            
             request.catch((e: AxiosError) => {
-                let data = e.response?.data as BasicResponse;
-                throw new Error(`Bad response from telegram api:\n${e.message}\n${data.description}`);
+                let data = (e.response as AxiosResponse<any,any>).data;
+                if (data) resolve(data);
+                // throw new Error(`Bad response from telegram api:\n${e.message}\n${data.description}`);
             })
 
             request.then((e) => {
-                resolve(e);
+                resolve(e.data);
             })
+
+            request.finally(() => {})
         })
-
-        let data: BasicResponse = await response.data;
-
+    
+        if (!data.ok) {
+            this.emit("error", data);
+        }
+    
         let result: RequestTypes[K]["response"] = data.result;
-            
         return result;
     }
 
@@ -57,17 +63,34 @@ export default class Client extends TelegramEventEmitter {
             const file = (await axios.request({
                 url: `https://api.telegram.org/file/bot${this.token}/${filePath}`,
                 method: "GET",
-                responseType: "arraybuffer"
+                responseType: "blob"
             })).data;
-            return Buffer.from(file, "binary").toString('base64');;
+            // return Buffer.from(file, "binary").toString('base64');
+            const formData = new FormData();
+
+            formData.append("file", file);
+            formData.append("model", "whisper-1");
+    
+            const response = (await axios.request({
+                url: "https://api.openai.com/v1/audio/transcriptions",
+                method: "post",
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${(formData as any).getBoundary()}`,
+                    'Authorization': `Bearer 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`
+                },
+                data: formData
+            })).data
+
+            console.log(response);
+
+            return file;
         } catch (e) {
             return (e as AxiosError).message;
         }
     }
 
     private async longpoll (updateId: number = 0) {
-        let updates = await this.request("getUpdates", 
-            { offset: (updateId != 0) ? updateId + 1 : updateId, timeout: 60});
+        let updates = await this.request("getUpdates", { offset: (updateId != 0) ? updateId + 1 : updateId, timeout: 60 });
 
         if (this.State) {
             updates.forEach(async (event) => {

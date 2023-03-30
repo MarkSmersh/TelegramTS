@@ -210,7 +210,8 @@ export interface MessageEntity {
 export interface ResponseEvents {
     load: [],
     start:  [ message: User ],
-    update: [ update: Update ]
+    update: [ update: Update ],
+    error: [ error: BasicResponse ]
 }
 
 type ParseModes = "MarkdownV2"| "HTML" | "Markdown";

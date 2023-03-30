@@ -1,7 +1,7 @@
 import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from "../src";
 
 const t = new Telegram({
-    token: "",
+    token: "6214200735:AAFp5VPLHr5VDvDFCAznZ0DtertnY-s-tns",
     state: new States({
         "default": [
             {
@@ -25,10 +25,15 @@ const t = new Telegram({
 
 t.on("start", (e) => {
     console.log(`Bot ${e.first_name} started!`);
+    t.request("sendMessage", { chat_id: -1, text: "It will never send this text..." }); // testing .on("error")
 })
 
 t.on("update", (e) => {
     console.log(e);
+})
+
+t.on("error", (e) => {
+    console.log(`Inside client occured error: ${e.description}`);
 })
 
 t.start();
