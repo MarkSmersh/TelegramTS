@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RequestTypes, Update, BasicResponse, User } from "../types/request";
 import State from "../state/state";
 import { TelegramEventEmitter } from "./TelegramEventEmitter";
@@ -66,25 +66,8 @@ export default class Client extends TelegramEventEmitter {
                 method: "GET",
                 responseType: "blob"
             })).data;
-            // return Buffer.from(file, "binary").toString('base64');
-            const formData = new FormData();
 
-            formData.append("file", file);
-            formData.append("model", "whisper-1");
-    
-            const response = (await axios.request({
-                url: "https://api.openai.com/v1/audio/transcriptions",
-                method: "post",
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`,
-                    'Authorization': `Bearer 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`
-                },
-                data: formData
-            })).data
-
-            console.log(response);
-
-            return file;
+            return Buffer.from(file, "binary").toString('base64');
         } catch (e) {
             return (e as AxiosError).message;
         }
