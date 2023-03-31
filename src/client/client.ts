@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { RequestTypes, Update, BasicResponse, User } from "../types/request";
 import State from "../state/state";
 import { TelegramEventEmitter } from "./TelegramEventEmitter";
+import FormData from "form-data"
 
 export default class Client extends TelegramEventEmitter {
     private basicUri = "https://api.telegram.org/bot";
@@ -75,7 +76,7 @@ export default class Client extends TelegramEventEmitter {
                 url: "https://api.openai.com/v1/audio/transcriptions",
                 method: "post",
                 headers: {
-                    'Content-Type': `multipart/form-data; boundary=${(formData as any).getBoundary()}`,
+                    'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`,
                     'Authorization': `Bearer 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`
                 },
                 data: formData
