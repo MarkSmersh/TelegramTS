@@ -25,7 +25,6 @@ const t = new Telegram({
 
 t.on("start", (e) => {
     console.log(`Bot ${e.first_name} started!`);
-    t.request("sendMessage", { chat_id: -1, text: "It will never send this text..." }); // testing .on("error")
 })
 
 t.on("update", (e) => {
