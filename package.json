@@ -1,6 +1,6 @@
 {
   "name": "@marksmersh/telegramts",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Low-weight telegram client written on typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,7 +22,6 @@
   "dependencies": {
     "@types/node": "^18.11.9",
     "axios": "^1.2.0",
-    "form-data": "^4.0.0",
     "ts-node": "^10.9.1"
   }
 }
