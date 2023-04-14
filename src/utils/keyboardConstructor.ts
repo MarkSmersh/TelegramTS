@@ -1,17 +1,16 @@
-import { InlineKeyboardButton, InlineKeyboardMarkup, 
-         ReplyKeyboardButton, ReplyKeyboardMarkup,
-         ReplyKeyboardRemove, ForceReply,
-         LoginUrl, MessageData, WebAppInfo} from "../types/request";
-import { CallbackData } from "../types/request";
+import { IInlineKeyboardButton, IInlineKeyboardMarkup, 
+         IReplyKeyboardButton, IReplyKeyboardMarkup,
+         IReplyKeyboardRemove, IForceReply,
+         ILoginUrl, MessageData, IWebAppInfo, CallbackData } from "../types";
 
-export function InlineMarkup (...inlineButtons: InlineKeyboardButton[][]): string {
-    let inlineKeyboard: InlineKeyboardMarkup = {
+export function InlineMarkup (...inlineButtons: IInlineKeyboardButton[][]): string {
+    let inlineKeyboard: IInlineKeyboardMarkup = {
         inline_keyboard: inlineButtons
     }
     return JSON.stringify(inlineKeyboard);
 }
 
-export function InlineButton (config: { text: string, callbackData?: CallbackData, webApp?: WebAppInfo, url?: string, loginUrl?: LoginUrl }): InlineKeyboardButton {
+export function InlineButton (config: { text: string, callbackData?: CallbackData, webApp?: IWebAppInfo, url?: string, loginUrl?: ILoginUrl }): IInlineKeyboardButton {
     return {
         text: config.text,
         callback_data: config.callbackData,
@@ -20,8 +19,8 @@ export function InlineButton (config: { text: string, callbackData?: CallbackDat
     }
 }
 
-export function ReplyMarkup (config: { resizeKeyboard?: boolean, oneTimeKeyboard?: boolean, inputFieldPlaceholder?: string, selective?: boolean }, ...replyButtons: ReplyKeyboardButton[][]): string { // ...replyButtons: ReplyKeyboardButton[][], 
-    let replyKeyboard: ReplyKeyboardMarkup = {
+export function ReplyMarkup (config: { resizeKeyboard?: boolean, oneTimeKeyboard?: boolean, inputFieldPlaceholder?: string, selective?: boolean }, ...replyButtons: IReplyKeyboardButton[][]): string { // ...replyButtons: ReplyKeyboardButton[][], 
+    let replyKeyboard: IReplyKeyboardMarkup = {
         keyboard: replyButtons,
         resize_keyboard: config.resizeKeyboard,
         one_time_keyboard: config.oneTimeKeyboard,
@@ -31,7 +30,7 @@ export function ReplyMarkup (config: { resizeKeyboard?: boolean, oneTimeKeyboard
     return JSON.stringify(replyKeyboard);
 }
 
-export function ReplyButton (config: { text: MessageData, requestContact?: boolean, requestLocation?: boolean, webApp?: WebAppInfo }): ReplyKeyboardButton {
+export function ReplyButton (config: { text: MessageData, requestContact?: boolean, requestLocation?: boolean, webApp?: IWebAppInfo }): IReplyKeyboardButton {
     return {
         text: config.text,
         request_contact: config.requestContact,
@@ -41,7 +40,7 @@ export function ReplyButton (config: { text: MessageData, requestContact?: boole
 }
 
 export function ReplyRemove (config: { selective?: boolean }): string { // ...replyButtons: ReplyKeyboardButton[][], 
-    let replyRemove: ReplyKeyboardRemove = {
+    let replyRemove: IReplyKeyboardRemove = {
         remove_keyboard: true,
         selective: config.selective
     }
@@ -49,7 +48,7 @@ export function ReplyRemove (config: { selective?: boolean }): string { // ...re
 }
 
 export function ForceReply (config: { inputFieldPlaceholder?: string, selective?: boolean }): string { // ...replyButtons: ReplyKeyboardButton[][], 
-    let forceReply: ForceReply = {
+    let forceReply: IForceReply = {
         force_reply: true,
         input_field_placeholder: config.inputFieldPlaceholder,
         selective: config.selective

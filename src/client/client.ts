@@ -1,15 +1,15 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { RequestTypes, Update, BasicResponse, User } from "../types/request";
-import State from "../state/state";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { IUpdate, IBasicResponse, IUser, RequestTypes } from "../types";
+import { State } from ".";
 import { TelegramEventEmitter } from "./TelegramEventEmitter";
-import FormData from "form-data"
+import { CallbackQuery, Message } from "../models";
 
-export default class Client extends TelegramEventEmitter {
+export class Telegram extends TelegramEventEmitter {
     private basicUri = "https://api.telegram.org/bot";
     
     private token: string;
     public State: typeof State.prototype | undefined;
-    public self: User | undefined;
+    public self: IUser | undefined;
 
     constructor (config: { token: string, state?: typeof State.prototype }) {
         super();
@@ -31,7 +31,7 @@ export default class Client extends TelegramEventEmitter {
     }
 
     public async request<K extends keyof RequestTypes, P extends RequestTypes[K]>(methodName: K, methodParams: P["request"] = {}): Promise<P["response"]> {  
-        let data: BasicResponse = await new Promise (async (resolve) => {
+        let data: IBasicResponse = await new Promise (async (resolve) => {
             let request = axios.request({
                 url: this.basicUri + this.token + "/" + methodName,
                 params: methodParams,
@@ -88,7 +88,7 @@ export default class Client extends TelegramEventEmitter {
             })
         }
         else {
-            updates.forEach((update: Update) => {
+            updates.forEach((update: IUpdate) => {
                 this.emit("update", update);
             })
         }
@@ -96,27 +96,35 @@ export default class Client extends TelegramEventEmitter {
         await this.longpoll(updates.at(-1)?.update_id);
     }
 
-    private async updateFilter (e: Update): Promise<string | undefined> {
+    private async updateFilter (e: IUpdate): Promise<string | undefined> {
         if (e.message) {
-            let state = (this.State?.states[e.message.chat.id]
-                || this.State?.update(e.message.chat.id, "default")) as string // e.callback_query.from.id
+            const m = new Message(this, e.message);
 
-            if (e.message.entities && e.message.entities.map((e) => e.type === "bot_command")) {
-                let command = e.message?.text?.split(" ").find((word) => word.startsWith("/")) as string;
-                return (await this.State?.filter("default", "command", command, [this, e.message]));
+            let state = (this.State?.states[m.chat.id]
+                || this.State?.update(m.chat.id, "default")) as string // e.callback_query.from.id
+
+            if (m.entities && m.entities.map((e) => e.type === "bot_command")) {
+                let command = m.text?.split(" ").find((word) => word.startsWith("/")) as string;
+                return (await this.State?.filter("default", "command", command, [this, m]));
             }
 
-            if (e.message.text) {
-                return (await this.State?.filter(state, "message", e.message.text as string, [this, e.message]));
+            if (m.text) {
+                return (await this.State?.filter(state, "message", m.text as string, [this, m]));
+            }
+
+            else {
+                return (await this.State?.filter(state, "message", "default", [this, m]));
             }
         }
         
         if (e.callback_query) {
+            const cq = new CallbackQuery(this, e.callback_query);
+
             let state = this.State?.states[e.callback_query.from.id]
                 || this.State?.update(e.callback_query.from.id, "default") as string;
 
-            await this.State?.filter("default", "callback", e.callback_query.data as string, [this, e.callback_query]);
-            return (await this.State?.filter(state, "callback", e.callback_query.data as string, [this, e.callback_query]));
+            await this.State?.filter("default", "callback", e.callback_query.data as string, [this, cq]);
+            return (await this.State?.filter(state, "callback", e.callback_query.data as string, [this, cq]));
         }
     }
 }

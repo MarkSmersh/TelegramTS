@@ -1,4 +1,4 @@
-import { ResponseEvents } from "../types/request";
+import { ResponseEvents } from "../types";
 import { EventEmitter } from "events";
 
 export class TelegramEventEmitter extends EventEmitter {

@@ -1,6 +1,6 @@
-import { EventTypeModel, EventModel, FunctionModel } from "../types/events";
+import { EventTypeModel, EventModel, FunctionModel } from "../types";
 
-export default class State {
+export class State {
     private events: Record<string, EventModel[]>;
     public states: Record<number, string>;
     private onStateUpdate: ((newState: string, id: number) => void) | undefined 

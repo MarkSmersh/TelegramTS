@@ -7,14 +7,15 @@ TelegramTS is low-weight client for telegram bots.
 - Low-weight
 - Has own state-machine for users
 - Events
-- Built-in function
+- Built-in function and constructors
 
 ### To do
 
 - [x] Basic TelegramBot client
 - [x] State-machine
-- [x] Add keyboard constructor
-- [ ] Create types for antire telegram api
+- [x] Keyboard constructors
+- [x] Some models with build-in function (like `.reply()` or `.get()`)
+- [ ] Create types (and models) for antire telegram api
 - [ ] In progress...
 
 # Instalation
@@ -26,58 +27,5 @@ npm install @marksmersh/telegramts
 ```
 
 # Example
-```ts
-import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from ".";
 
-const t = new Telegram({
-    token: "your token here",
-    state: new States({
-        "default": [
-            {
-                type: "command",
-                data: "/start",
-                function: start
-            },
-        ],
-        "menu": [
-            {
-                type: "message",
-                data: "finish",
-                function: finish
-            }
-        ]
-    }, {
-        states: {}, // Record of states (ex you can sync states from database)
-        onStateUpdate: newStateExecute // Callback function, that works, when states was changed
-    })
-})
-
-t.once("start", (e) => {
-    console.log(`Bot ${e.first_name} started!`);
-})
-
-t.once("load", () => {
-  // You can insert here anything, that need to load before client starts. For example auth and sync database
-})
-
-t.start();
-
-async function start(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Started!", chat_id: event.chat.id, 
-        reply_markup: ReplyMarkup({ resizeKeyboard: true }, [
-            ReplyButton({ text: "finish" })
-        ], [
-            ReplyButton({ text: "finish" }), ReplyButton({ text: "finish" })
-        ])})
-    return "menu"; // As an analog, can be used client.States.update()
-}
-
-async function finish(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Finish!", chat_id: event.chat.id,
-        reply_markup: ReplyRemove({})})
-}
-
-async function newStateExecute(newState: string) {
-    console.log(`New state!: ${newState}`);
-}
-```
+[basic.ts](https://raw.githubusercontent.com/MarkSmersh/TelegramTS/master/example/basic.ts)

@@ -1,8 +1,8 @@
-import { Telegram, States, Message, ReplyMarkup, ReplyButton, ReplyRemove } from "../src";
+import { Telegram, State, ReplyMarkup, ReplyButton, ReplyRemove, Message } from "../src";
 
 const t = new Telegram({
-    token: "6214200735:AAFp5VPLHr5VDvDFCAznZ0DtertnY-s-tns",
-    state: new States({
+    token: "",
+    state: new State({
         "default": [
             {
                 type: "command",
@@ -15,6 +15,11 @@ const t = new Telegram({
                 type: "message",
                 data: "finish",
                 function: finish
+            },
+            {
+                type: "message",
+                data: "default",
+                function: other
             }
         ]
     }, {
@@ -38,18 +43,35 @@ t.on("error", (e) => {
 t.start();
 
 async function start(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Started!", chat_id: event.chat.id, 
-        reply_markup: ReplyMarkup({ resizeKeyboard: true }, [
-            ReplyButton({ text: "finish" })
-        ], [
-            ReplyButton({ text: "finish" }), ReplyButton({ text: "finish" })
-        ])})
+    await event.reply({
+        text: "Started!",
+        reply_markup: ReplyMarkup({ resizeKeyboard: true }, 
+            [
+                ReplyButton({ text: "finish" })
+            ], 
+            [
+                ReplyButton({ text: "finish" }), ReplyButton({ text: "finish" })
+            ]
+        )
+    })
     return "menu";
 }
 
 async function finish(client: Telegram, event: Message) {
-    client.request("sendMessage", { text: "Finish!", chat_id: event.chat.id,
-        reply_markup: ReplyRemove({})})
+    await event.reply({
+        text: "Finish!",
+        reply_markup: ReplyRemove({})
+    })
+}
+
+async function other(client: Telegram, event: Message) {
+    if (event.voice) {
+        await event.voice.download();
+        await event.reply({ text: "Some audio downloaded!" })
+        return;
+    }
+
+    await event.reply({ text: event.text })
 }
 
 async function newStateExecute(newState: string) {

@@ -1,5 +1,5 @@
-import Client from "../client/client";
-import { SlashCommands, CallbackData, MessageData } from "./request";
+import { Telegram } from "..";
+import { SlashCommands, CallbackData, MessageData } from ".";
 
 export interface EventModel {
     type: keyof EventTypeModel,
@@ -13,6 +13,6 @@ export interface EventTypeModel {
     message: MessageData
 }
 
-export type FunctionModel = (client: Client, event: any) => Promise<FunctionReturn>
+export type FunctionModel = (client: Telegram, event: any) => Promise<FunctionReturn>
 
 export type FunctionReturn = string | void; 
