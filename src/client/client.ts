@@ -76,52 +76,14 @@ export default class Client extends TelegramEventEmitter {
         let updates = await this.request("getUpdates", { offset: (updateId != 0) ? updateId + 1 : updateId, timeout: 60 });
 
         if (this.State) {
-            updates.forEach(async (event) => {
-                if (event.message) {
-                    let state = this.State?.states[event.message.chat.id]
-                        || this.State?.update(event.message.chat.id, "default") as string // event.callback_query.from.id
+            updates.forEach(async (update) => {
+                let newState = await this.updateFilter(update);
 
-                    if (event.message.entities) {
-                        for (let i = 0; i < event.message.entities.length; i++) {
-                            if (event.message.entities[i].type == "bot_command") {
-                                let command = event.message?.text?.split(" ").find((word) => word.startsWith("/")) as string;
-                                let newState = await this.State?.filter("default", "command", command, [this, event.message])
-
-                                if (newState) {
-                                    this.State?.update(
-                                        event.message.chat.id,
-                                        newState
-                                    )
-                                }
-                                return;
-                            }
-                        }
-                    }
-                    else {
-                        let newState = await this.State?.filter(state, "message", event.message.text as string, [this, event.message])
-
-                        if (newState) {
-                            this.State?.update(
-                                event.message.chat.id,
-                                newState
-                            )
-                        }
-                        return;
-                    }
-                }
-                if (event.callback_query) {
-                    let state = this.State?.states[event.callback_query.from.id]
-                        || this.State?.update(event.callback_query.from.id, "default") as string;
-                    await this.State?.filter("default", "callback", event.callback_query.data as string, [this, event.callback_query]);
-                    
-                    let newState = await this.State?.filter(state, "callback", event.callback_query.data as string, [this, event.callback_query]);
-                    if (newState) {
-                        this.State?.update(
-                            event.callback_query.from.id,
-                            newState
-                        )
-                    }
-                    return;
+                if (newState) {
+                    this.State?.update(
+                        update.message.chat.id || update.callback_query.from.id || 0,
+                        newState
+                    )
                 }
             })
         }
@@ -132,5 +94,29 @@ export default class Client extends TelegramEventEmitter {
         }
 
         await this.longpoll(updates.at(-1)?.update_id);
+    }
+
+    private async updateFilter (e: Update): Promise<string | undefined> {
+        if (e.message) {
+            let state = (this.State?.states[e.message.chat.id]
+                || this.State?.update(e.message.chat.id, "default")) as string // e.callback_query.from.id
+
+            if (e.message.entities && e.message.entities.map((e) => e.type === "bot_command")) {
+                let command = e.message?.text?.split(" ").find((word) => word.startsWith("/")) as string;
+                return (await this.State?.filter("default", "command", command, [this, e.message]));
+            }
+
+            if (e.message.text) {
+                return (await this.State?.filter(state, "message", e.message.text as string, [this, e.message]));
+            }
+        }
+        
+        if (e.callback_query) {
+            let state = this.State?.states[e.callback_query.from.id]
+                || this.State?.update(e.callback_query.from.id, "default") as string;
+
+            await this.State?.filter("default", "callback", e.callback_query.data as string, [this, e.callback_query]);
+            return (await this.State?.filter(state, "callback", e.callback_query.data as string, [this, e.callback_query]));
+        }
     }
 }
