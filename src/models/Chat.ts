@@ -18,6 +18,8 @@ export class Chat implements IChat {
     }
 
     async get () {
-        return (await this.client.request('getChat', { chat_id: this.id }))
+        return (
+            new Chat(this.client, await this.client.request('getChat', { chat_id: this.id }))
+        )
     }
 }

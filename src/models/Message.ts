@@ -45,14 +45,20 @@ export class Message implements IMessage {
     }
 
     async reply(p: Omit<RequestTypes['sendMessage']["request"], "chat_id" | "reply_to_message_id">) {
-      return (await this.client.request('sendMessage', { chat_id: this.chat.id, reply_to_message_id: this.message_id, ...p }))
+      return (
+        new Message(this.client, await this.client.request('sendMessage', { chat_id: this.chat.id, reply_to_message_id: this.message_id, ...p }))
+      )
     }
 
     async edit(p: Omit<RequestTypes['editMessageText']["request"], "chat_id" | "message_id">) {
-      return (await this.client.request('editMessageText', { chat_id: this.chat.id, message_id: this.message_id, ...p }))
+      return (
+        new Message(this.client, await this.client.request('editMessageText', { chat_id: this.chat.id, message_id: this.message_id, ...p }))
+      )
     }
 
     async delete() {
-      return (await this.client.request('deleteMessage', { chat_id: this.chat.id, message_id: this.message_id.toString()}))
+      return (
+        await this.client.request('deleteMessage', { chat_id: this.chat.id, message_id: this.message_id.toString() })
+      )
     }
 }
