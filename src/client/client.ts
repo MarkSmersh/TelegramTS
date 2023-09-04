@@ -11,10 +11,10 @@ export class Telegram extends TelegramEventEmitter {
     public State: typeof State.prototype | undefined;
     public self: IUser | undefined;
 
-    constructor (config: { token: string, state?: typeof State.prototype }) {
+    constructor ({ token, state }: { token: string, state?: typeof State.prototype }) {
         super();
-        this.token = config.token;
-        if (config.state) this.State = config.state;
+        this.token = token;
+        if (state) this.State = state;
     }
 
     public load () {
